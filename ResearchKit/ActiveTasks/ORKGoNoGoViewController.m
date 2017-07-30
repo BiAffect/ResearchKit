@@ -190,12 +190,20 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
 
 - (void)deviceMotionRecorderDidUpdateWithMotion:(CMDeviceMotion *)motion {
     CMAcceleration v = motion.userAcceleration;
+    CMRotationRate g = motion.rotationRate;
+    
     double vectorMagnitude = sqrt(((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
     
     if (self.started && _samples != nil) {
         ORKGoNoGoSample *sample = [ORKGoNoGoSample new];
         sample.timestamp = [NSProcessInfo processInfo].systemUptime;
         sample.vectorMagnitude = vectorMagnitude;
+        sample.accelX = v.x;
+        sample.accelY = v.y;
+        sample.accelZ = v.z;
+        sample.gyroX  = g.x;
+        sample.gyroY  = g.y;
+        sample.gyroZ  = g.z;
         [_samples addObject:sample];
     }
     
