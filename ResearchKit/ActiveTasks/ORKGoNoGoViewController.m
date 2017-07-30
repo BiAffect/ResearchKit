@@ -225,9 +225,12 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
             lastReactionTime = res.timeToThreshold;
         }
     }
-    
+
+    int total = [self gonogoTimeStep].numberOfAttempts;
+    int step = MIN(total, successCount + 1);
+
     NSString *format = ORKLocalizedString(@"GONOGO_TASK_ATTEMPTS_FORMAT", nil);
-    NSString *text = [NSString localizedStringWithFormat:format, ORKLocalizedStringFromNumber(@(successCount + 1)), ORKLocalizedStringFromNumber(@([self gonogoTimeStep].numberOfAttempts))];
+    NSString *text = [NSString localizedStringWithFormat:format, ORKLocalizedStringFromNumber(@(step)), ORKLocalizedStringFromNumber(@(total))];
     
     if (errorCount > 0) {
         NSString *errorsFormat = ORKLocalizedString(@"GONOGO_TASK_ERRORS_FORMAT", nil);
@@ -254,7 +257,8 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
         
         if (successCount == [self gonogoTimeStep].numberOfAttempts) {
             _testEnded = YES;
-            [self finish];
+            [self configureTitle];
+            [self performSelector:@selector(finish) withObject:nil afterDelay:2.5];
         } else {
             // If the user cancels the test, there may be animations active,
             // and the animation complete block will start the next test
