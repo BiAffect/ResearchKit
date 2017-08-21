@@ -55,6 +55,8 @@
     NSTimer *_stimulusTimer;
     NSTimer *_timeoutTimer;
     NSTimeInterval _stimulusTimestamp;
+    NSTimeInterval _thresholdTimestamp;
+    int _samplesSinceStimulus;
     BOOL _validResult;
     BOOL _timedOut;
     BOOL _shouldIndicateFailure;
@@ -126,6 +128,8 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
 #pragma mark - ORKActiveStepViewController
 
 - (void)start {
+    _stimulusTimestamp = 0;
+    _thresholdTimestamp = 0;
     [_samples removeAllObjects];
     [super start];
     [self startStimulusTimer];
@@ -194,7 +198,14 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
         [_samples addObject:sample];
     }
     
+    if (_stimulusTimestamp > 0) {
+        _samplesSinceStimulus++;
+    }
+    
     if (vectorMagnitude > [self gonogoTimeStep].thresholdAcceleration) {
+        _thresholdTimestamp = [NSProcessInfo processInfo].systemUptime;
+    }
+    if (_samplesSinceStimulus > 100 && _thresholdTimestamp > 0) {
         [self stopRecorders];
     }
 }
@@ -286,7 +297,6 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
     }
     
     // Create a result
-    NSTimeInterval now = [NSProcessInfo processInfo].systemUptime;
     
     NSMutableArray *samples = [[NSMutableArray alloc] init];
     
@@ -305,7 +315,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
     ORKGoNoGoResult *gonogoResult = [[ORKGoNoGoResult alloc] initWithIdentifier:uniqueStep];
     gonogoResult.timestamp = _stimulusTimestamp;
     gonogoResult.samples = [samples copy];
-    gonogoResult.timeToThreshold = now - _stimulusTimestamp;
+    gonogoResult.timeToThreshold = _thresholdTimestamp - _stimulusTimestamp;
     gonogoResult.go = go;
     gonogoResult.incorrect = incorrect;
     [_results addObject:gonogoResult];
