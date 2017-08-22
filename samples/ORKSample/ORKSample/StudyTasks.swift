@@ -58,7 +58,7 @@ struct StudyTasks {
         /// An example of a custom sound.
         let successSoundURL = Bundle.main.url(forResource:"tap", withExtension: "aif")!
         let successSound = SystemSound(soundURL: successSoundURL)!
-        return ORKOrderedTask.gonogoTask(withIdentifier: "GoNoGo", intendedUseDescription: intendedUseDescription, maximumStimulusInterval: 10, minimumStimulusInterval: 4, thresholdAcceleration: 0.5, numberOfAttempts: 9, timeout: 3, successSound: successSound.soundID, timeoutSound: 0, failureSound: UInt32(kSystemSoundID_Vibrate), options: [])
+        return ORKOrderedTask.gonogoTask(withIdentifier: "GoNoGo", intendedUseDescription: intendedUseDescription, maximumStimulusInterval: 2, minimumStimulusInterval: 0.1, thresholdAcceleration: 0.5, numberOfAttempts: 9, timeout: 1, successSound: successSound.soundID, timeoutSound: 0, failureSound: UInt32(kSystemSoundID_Vibrate), options: [])
     }()
     
     static let microphoneTask: ORKOrderedTask = {

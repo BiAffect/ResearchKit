@@ -138,6 +138,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
 #if TARGET_IPHONE_SIMULATOR
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     if (event.type == UIEventSubtypeMotionShake) {
+        _thresholdTimestamp = [NSProcessInfo processInfo].systemUptime;
         [self attemptDidFinish];
     }
 }
@@ -315,7 +316,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
     ORKGoNoGoResult *gonogoResult = [[ORKGoNoGoResult alloc] initWithIdentifier:uniqueStep];
     gonogoResult.timestamp = _stimulusTimestamp;
     gonogoResult.samples = [samples copy];
-    gonogoResult.timeToThreshold = _thresholdTimestamp - _stimulusTimestamp;
+    gonogoResult.timeToThreshold = go ? _thresholdTimestamp - _stimulusTimestamp : 0;
     gonogoResult.go = go;
     gonogoResult.incorrect = incorrect;
     [_results addObject:gonogoResult];
