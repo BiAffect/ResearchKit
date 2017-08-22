@@ -349,6 +349,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
 
     if (successCount == [self gonogoTimeStep].numberOfAttempts - 1) {
         if (_noGoCount == 0) {
+            _noGoCount++;
             return NO;
         }
     }
