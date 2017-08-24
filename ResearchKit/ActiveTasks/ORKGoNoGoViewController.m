@@ -130,6 +130,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
 - (void)start {
     _stimulusTimestamp = 0;
     _thresholdTimestamp = 0;
+    _samplesSinceStimulus = 0;
     [_samples removeAllObjects];
     [super start];
     [self startStimulusTimer];
@@ -311,7 +312,7 @@ static const NSTimeInterval OutcomeAnimationDuration = 0.3;
             [samples addObject:sample];
         }
     }
-    
+        
     NSString *uniqueStep = [NSString stringWithFormat:@"%@.%@", self.step.identifier, [[NSUUID UUID] UUIDString]];
     ORKGoNoGoResult *gonogoResult = [[ORKGoNoGoResult alloc] initWithIdentifier:uniqueStep];
     gonogoResult.timestamp = _stimulusTimestamp;
